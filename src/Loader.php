@@ -7,6 +7,7 @@ use DamageTag\entity\DamageTagEntity;
 use pocketmine\data\bedrock\EntityLegacyIds;
 use pocketmine\entity\EntityDataHelper;
 use pocketmine\entity\EntityFactory;
+use pocketmine\entity\Living;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\Listener;
 use pocketmine\nbt\tag\CompoundTag;
@@ -30,6 +31,9 @@ class Loader extends PluginBase implements Listener{
 	 */
 	public function onDamage(EntityDamageEvent $event){
 		$entity = $event->getEntity();
+		if (!$entity instanceof Living){
+			return;
+		}
 		$damage = $event->getFinalDamage();
 		$location = $entity->getLocation();
 		$location->y += 1.5;

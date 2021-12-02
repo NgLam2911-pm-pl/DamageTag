@@ -61,7 +61,14 @@ class DamageTagEntity extends Entity{
 			$this->flagForDespawn();
 			return true;
 		}
-		return parent::onUpdate($currentTick);
+		$tickDiff = $currentTick - $this->lastUpdate;
+		$this->lastUpdate = $currentTick;
+		return $this->entityBaseTick($tickDiff);
+	}
+
+	protected function entityBaseTick(int $tickDiff = 1) : bool{
+		$this->ticksLived += $tickDiff;
+		return false;
 	}
 
 	public function attack(EntityDamageEvent $source) : void{
@@ -87,6 +94,5 @@ class DamageTagEntity extends Entity{
 	public function getOffsetPosition(Vector3 $vector3) : Vector3{
 		return parent::getOffsetPosition($vector3)->add(0.0, 0.49, 0.0);
 	}
-
 
 }
