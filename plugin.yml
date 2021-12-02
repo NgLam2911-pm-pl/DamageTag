@@ -1,0 +1,6 @@
+name: DamageTag
+main: DamageTag\Loader
+src-namespace-prefix: DamageTag
+version: 0.0.1
+author: NgLamVN
+api: 4.0.0
