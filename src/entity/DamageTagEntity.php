@@ -3,13 +3,18 @@ declare(strict_types=1);
 
 namespace DamageTag\entity;
 
+use pocketmine\block\VanillaBlocks;
 use pocketmine\entity\Entity;
 use pocketmine\entity\EntitySizeInfo;
 use pocketmine\entity\Location;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\network\mcpe\convert\RuntimeBlockMapping;
 use pocketmine\network\mcpe\protocol\types\entity\EntityIds;
+use pocketmine\network\mcpe\protocol\types\entity\EntityMetadataCollection;
+use pocketmine\network\mcpe\protocol\types\entity\EntityMetadataFlags;
+use pocketmine\network\mcpe\protocol\types\entity\EntityMetadataProperties;
 
 class DamageTagEntity extends Entity{
 
@@ -40,6 +45,15 @@ class DamageTagEntity extends Entity{
 		parent::initEntity($nbt);
 		$this->setNameTag((string)$this->damage);
 		$this->setNameTagAlwaysVisible(true);
+	}
+
+	protected function syncNetworkData(EntityMetadataCollection $properties) : void{
+		parent::syncNetworkData($properties);
+		$properties->setByte(EntityMetadataProperties::ALWAYS_SHOW_NAMETAG, $this->alwaysShowNameTag ? 1 : 0);
+		$properties->setFloat(EntityMetadataProperties::SCALE, $this->scale);
+		$properties->setString(EntityMetadataProperties::NAMETAG, $this->nameTag);
+		$properties->setGenericFlag(EntityMetadataFlags::IMMOBILE, $this->immobile);
+		$properties->setInt(EntityMetadataProperties::VARIANT, RuntimeBlockMapping::getInstance()->toRuntimeId(VanillaBlocks::AIR()->getFullId()));
 	}
 
 	public function onUpdate(int $currentTick) : bool{
